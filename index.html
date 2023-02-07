@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Skincare Advisor and VTO</title>
+      <!-- Responsive Image Code 
+            <img src="https://i.imgur.com/7i7g39d.jpeg" alt="Nature" class="responsive">   -->
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: #f2f2f2;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+        
+
+      .closeButton {
+        cursor: pointer;
+        display: inline-block;
+        height: 30px;
+        padding: 10px;
+        position: absolute;
+        right: 20px;
+        top: 30px;
+        width: 30px;
+      }
+
+        .responsive {
+        width: 100%;
+        height: auto;
+            }
+        
+      .closeButton:before,
+      .closeButton:after {
+        background-color: black;
+        border-radius: 30px;
+        content: "";
+        height: 6px;
+        position: absolute;
+        width: 100%;
+        top: 45%;
+        left: 0;
+      }
+
+      .closeButton:after {
+        transform: rotate(45deg);
+      }
+
+      .closeButton:before {
+        transform: rotate(135deg);
+      }
+
+      .modal {
+        background-color: rgba(0, 0, 0, 0.5);
+        display: grid;
+        place-items: center;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        opacity: 0;
+        visibility: hidden;
+        z-index: 10000;
+        transition: all 0.3s ease-in-out;
+        transform: translateY(30px);
+      }
+
+      .modalview {
+        background-color: white;
+        border-radius: 9px;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        position: relative;
+        height: 500px;
+        max-width: 450px;
+        width: 100%;
+      }
+
+      .modal img {
+        height: 100%;
+        margin: 0 auto;
+      }
+
+      .show {
+        visibility: visible;
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .buttons button {
+        border: none;
+        background-color: rgb(204, 0, 0);
+        color: #fff;
+        padding: 12px;
+        border-radius: 8px;
+        margin: 10px;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .container h2 {
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Welcome! Please choose from below:</h2>
+      <div class="buttons">
+        <button id="skincare" onclick="init('FuvEvZrEdJ')">Skincare Advisor</button>
+        <button id="makeup" onclick="init('wUKHyrm1SX')">Makeup Virtual Try-On</button>
+      </div>
+    </div>
+
+    <div class="modal">
+      <div class="modalview">
+        <span class="closeButton"></span>
+        <img style="display: none" id="makeup-promo" src="makeup_promo.jpg" alt="Makeup promo" />
+        <img style="display: none" id="skincare-promo" src="skincare_promo.jpg" alt="Skincare promo" />
+      </div>
+    </div>
+    <script>
+      var modal = document.querySelector(".modal");
+      var modalview = document.querySelector(".modalview");
+      var closeButton = document.querySelector(".closeButton");
+
+      closeButton.addEventListener("click", () => {
+        modal.classList.remove("show");
+      });
+      modal.addEventListener("click", () => {
+        modal.classList.remove("show");
+      });
+
+      function init(partnerId) {
+        var fetchProductsModalShown = false;
+        document.querySelectorAll(".modalview img").forEach(function (el) {
+          el.style.display = "none";
+        });
+
+        if (partnerId === "FuvEvZrEdJ") {
+          document.querySelector("#skincare-promo").style.display = "block";
+        }
+
+        if (partnerId === "wUKHyrm1SX") {
+          document.querySelector("#makeup-promo").style.display = "block";
+        }
+
+        if (window.Revieve && window.Revieve.API) {
+          Revieve.API.unmount();
+        }
+        var config = {
+          partner_id: partnerId,
+          locale: "en",
+          env: "prod",
+          user_id: "abcd",
+          onAddToCart(prods) {
+            // Continue only if add ALL to cart is clicked
+            if (!Array.isArray(prods)) return;
+
+            //  modal.classList.add("show");
+          },
+          onFetchProducts() {
+            if (fetchProductsModalShown) return;
+            //  modal.classList.add("show");
+            fetchProductsModalShown = true;
+          },
+          onClickProduct(product) {
+            window.open(product.url, "_blank").focus();
+          },
+        };
+
+        console.log(config);
+
+        (function () {
+          var rv = document.createElement("script");
+          rv.src = "https://d38knilzwtuys1.cloudfront.net/revieve-plugin-v4/revieve-plugin-loader.js";
+          rv.type = "text/javascript";
+          rv.async = "true";
+          rv.onload = rv.onreadystatechange = function () {
+            var rs = this.readyState;
+            if (rs && rs != "complete" && rs != "loaded") return;
+            Revieve.Init(config, function () {
+              // Comment out the below line if you want to open the modal
+              // manually when user clicks a certain button or navigates
+              // to certain page.
+              Revieve.API.show();
+            });
+          };
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(rv, s);
+        })();
+      }
+    </script>
+
+    <!-- Google Analytics -->
+    <script>
+      (function (i, s, o, g, r, a, m) {
+        i["GoogleAnalyticsObject"] = r;
+        (i[r] =
+          i[r] ||
+          function () {
+            (i[r].q = i[r].q || []).push(arguments);
+          }),
+          (i[r].l = 1 * new Date());
+        (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m);
+      })(window, document, "script", "https://www.google-analytics.com/analytics.js", "ga");
+
+      ga("create", "UA-80711182-6", "auto");
+      // ga('create', 'UA-XXXXX-Z', 'auto', 'CVS'); Replace UA-XXXXX-Z with CVS TRACKING ID and remove // from the start of this line
+
+      window.trackEvent = (category, action, label) => {
+        ga("send", category, action, label);
+        ga("CVS.send", category, action, label);
+      };
+
+      trackEvent("pageview");
+
+      var queryString = window.location.search;
+      var urlParams = new URLSearchParams(queryString);
+      var trackingId = urlParams.get("trackingId");
+
+      trackEvent("System", "StoreID", trackingId);
+    </script>
+    <!-- End Google Analytics -->
+  </body>
+</html>
