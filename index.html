@@ -156,7 +156,9 @@
         }
 
         if (window.Revieve && window.Revieve.API) {
-          Revieve.API.unmount();
+        
+            console.log("window.revieve - "+ JSON.stringify(window.Revieve) + " and "+ JSON.stringify(window.Revieve.API));
+            Revieve.API.unmount();
              
         }
         var config = {
@@ -186,7 +188,7 @@
         
       
        if (data.label === 'questions')
-           init('9LQTNOOdtp');//alert("Skincare Advisor");
+        init('9LQTNOOdtp');//alert("Skincare Advisor");
            
            else if (data.label === 'video')
                init('VKXfE4QN60'); //alert("Makeup VTO");
@@ -203,9 +205,25 @@
               onClose: function () {
                   //if(config.partner_id === "9LQTNOOdtp");
                 //      Revieve.API.hide();
-                  //    Revieve.API.unmount();
-                   //   init('ZxYUx2eanV');
+                  
+                  if(config.partner_id === "9LQTNOOdtp")
+                  {
+                      console.log("current state is Skincare Page")
+                      window.location.reload();
+                  //Revieve.API.unmount();
+                   //sessionStorage.clear();
+                   //init('ZxYUx2eanV');
                   //window.location.reload();
+                  }
+                  else if(config.partner_id === "VKXfE4QN60")
+                  {
+                      console.log("current state is Skincare Page")
+                      window.location.reload();
+                  //Revieve.API.unmount();
+                   //sessionStorage.clear();
+                   //init('ZxYUx2eanV');
+                  //window.location.reload();
+                  }
                   }
         };
 
@@ -230,7 +248,7 @@
           s.parentNode.insertBefore(rv, s);
         })();
       }
-        
+        console.log("Going to start init function");
         
         init('ZxYUx2eanV');
     </script>
